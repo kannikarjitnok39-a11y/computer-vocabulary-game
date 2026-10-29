@@ -132,7 +132,6 @@ function stopMusic() {
 
 
 $("musicToggle").onclick = () => {
-  alert("ปุ่มเพลงทำงาน");
   if (musicOn) {
     stopMusic();
   } else {
