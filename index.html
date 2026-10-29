@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Vocabulary Game</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg-grid"></div>
+<main class="app">
+  <header class="topbar">
+    <div class="brand"><span class="brand-icon">⌘</span><div><b>VOCAB<span>TECH</span></b><small>COMPUTER VOCABULARY GAME</small></div></div>
+    <button class="sound-toggle" id="soundToggle" aria-label="เปิดหรือปิดเสียง">🔊 เสียงเปิด</button>
+  </header>
+
+  <section class="screen active" id="homeScreen">
+    <div class="hero">
+      <div class="eyebrow"><span class="pulse"></span> LEARN • MATCH • LEVEL UP</div>
+      <h1>Computer<br><span>Vocabulary</span><br>Game</h1>
+      <p class="intro">ฝึกจำคำศัพท์คอมพิวเตอร์ผ่านเกมจับคู่แสนสนุก<br>จับคู่คำศัพท์ภาษาอังกฤษกับความหมายภาษาไทยให้ถูกต้อง</p>
+      <div class="feature-row"><span>⚡ หลายด่าน</span><span>♡ มีหัวใจ</span><span>◷ จับเวลา</span></div>
+      <button class="primary-btn" id="startBtn">เริ่มเล่นเกม <span>→</span></button>
+      <p class="hint">จับคู่ให้ครบก่อนหมดเวลา ระวังหัวใจหมดนะ!</p>
+    </div>
+    <div class="tech-art" aria-hidden="true">
+      <div class="orbit orbit1"></div><div class="orbit orbit2"></div>
+      <div class="chip"><span>CPU</span><i>✦</i></div>
+      <div class="float-card card-a">0101 <span>DATA</span></div>
+      <div class="float-card card-b">{" } <span>CODE</span></div>
+      <div class="float-card card-c">⌘ <span>TECH</span></div>
+      <div class="spark s1">✦</div><div class="spark s2">+</div><div class="spark s3">✧</div>
+    </div>
+  </section>
+
+  <section class="screen" id="gameScreen">
+    <div class="game-heading">
+      <div><div class="eyebrow">MISSION IN PROGRESS</div><h2>จับคู่คำศัพท์ <span id="levelTitle">ด่าน 1</span></h2></div>
+      <button class="ghost-btn" id="homeBtn">ออกจากเกม</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><small>คะแนน</small><b id="score">0</b><span>★</span></div>
+      <div class="stat"><small>หัวใจ</small><b id="lives">❤️❤️❤️</b></div>
+      <div class="stat"><small>เวลา</small><b id="timer">60</b><span>วินาที</span></div>
+      <div class="stat"><small>ความคืบหน้า</small><b id="progress">0/5</b></div>
+    </div>
+    <div class="progress-track"><div id="progressBar"></div></div>
+    <p class="instruction">แตะคำศัพท์ภาษาอังกฤษ 1 ใบ แล้วเลือกความหมายภาษาไทยที่ตรงกัน</p>
+    <div class="match-board">
+      <div class="match-column"><h3><span>EN</span> English</h3><div id="englishCards" class="cards"></div></div>
+      <div class="match-column"><h3><span>TH</span> ภาษาไทย</h3><div id="thaiCards" class="cards"></div></div>
+    </div>
+    <div class="feedback" id="feedback" aria-live="polite">เลือกคำศัพท์เพื่อเริ่มจับคู่</div>
+  </section>
+
+  <section class="screen" id="resultScreen">
+    <div class="result-panel">
+      <div class="result-icon" id="resultIcon">🏆</div>
+      <div class="eyebrow">MISSION REPORT</div>
+      <h2 id="resultTitle">เก่งมาก!</h2>
+      <p id="resultMessage">คุณทำภารกิจสำเร็จแล้ว</p>
+      <div class="final-score"><small>คะแนนรวมของคุณ</small><strong id="finalScore">0</strong><span>POINTS</span></div>
+      <div class="result-stats"><div><small>จับคู่ถูก</small><b id="finalCorrect">0</b></div><div><small>ด่านที่ผ่าน</small><b id="finalLevel">1</b></div><div><small>ความแม่นยำ</small><b id="finalAccuracy">0%</b></div></div>
+      <button class="primary-btn" id="againBtn">เล่นอีกครั้ง <span>↻</span></button>
+      <button class="text-btn" id="menuBtn">กลับหน้าหลัก</button>
+    </div>
+  </section>
+  <footer>COMPUTER VOCABULARY GAME <span>•</span> LEARNING THROUGH PLAY</footer>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
