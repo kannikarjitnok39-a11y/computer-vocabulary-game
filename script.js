@@ -36,6 +36,7 @@ let musicTimer = null;
 let musicStep = 0;
 
 
+
 function startMusic() {
   if (musicOn) return;
 
@@ -51,32 +52,33 @@ function startMusic() {
     musicGain.connect(audioCtx.destination);
 
     const melody = [
-      523.25, 659.25, 783.99, 659.25,
-      587.33, 659.25, 523.25, 392.00,
-      440.00, 523.25, 659.25, 523.25,
-      392.00, 440.00, 523.25, 440.00
+      659.25, 783.99, 987.77, 783.99,
+      659.25, 987.77, 1174.66, 987.77,
+      783.99, 880.00, 1046.50, 880.00,
+      659.25, 783.99, 987.77, 1174.66
     ];
 
-    const bass = [130.81, 110.00, 87.31, 98.00];
+    const bass = [110, 110, 146.83, 130.81];
     let step = 0;
 
-    function playNote(freq, start, duration, volume, type) {
+    function playNote(freq, time, duration, volume, type) {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
       osc.type = type;
-      osc.frequency.value = freq;
+      osc.frequency.setValueAtTime(freq, time);
+
+      gain.gain.setValueAtTime(0.0001, time);
+      gain.gain.linearRampToValueAtTime(volume, time + 0.015);
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001, time + duration
+      );
+
       osc.connect(gain);
       gain.connect(musicGain);
 
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.linearRampToValueAtTime(volume, start + 0.04);
-      gain.gain.exponentialRampToValueAtTime(
-        0.0001, start + duration
-      );
-
-      osc.start(start);
-      osc.stop(start + duration + 0.02);
+      osc.start(time);
+      osc.stop(time + duration + 0.02);
     }
 
     function playBeat() {
@@ -84,29 +86,32 @@ function startMusic() {
 
       const now = audioCtx.currentTime;
       const note = melody[step % melody.length];
-      const bassNote = bass[Math.floor(step / 4) % bass.length];
 
-      playNote(note, now, 0.42, 0.10, "sine");
+      playNote(note, now, 0.16, 0.10, "square");
 
       if (step % 2 === 0) {
-        playNote(note / 2, now, 0.65, 0.045, "triangle");
+        playNote(
+          bass[Math.floor(step / 2) % bass.length],
+          now, 0.22, 0.13, "triangle"
+        );
       }
 
       if (step % 4 === 0) {
-        playNote(bassNote, now, 0.8, 0.12, "sine");
+        playNote(1400, now, 0.045, 0.025, "sine");
       }
 
       step++;
     }
 
     playBeat();
-    musicTimer = setInterval(playBeat, 350);
+    musicTimer = setInterval(playBeat, 160);
 
     $("musicToggle").textContent = "🎵 ปิดเพลง";
   } catch (error) {
     musicOn = false;
   }
 }
+
 
 function stopMusic() {
   musicOn = false;
