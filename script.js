@@ -65,9 +65,11 @@ function startTimer(){
     $("timer").textContent=timeLeft;
     $("timer").style.color=timeLeft<=10?"#ff4d6d":"";
 
-    if(timeLeft<=10 && timeLeft>0){
-      sound("click");
-    }
+    
+if(timeLeft<=10 && timeLeft>0){
+  sound("bad");
+}
+
 
     if(timeLeft<=0){
       endGame(false,"หมดเวลา!");
