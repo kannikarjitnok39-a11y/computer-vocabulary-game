@@ -57,15 +57,24 @@ function startGame(){
   showScreen("gameScreen");
   loadLevel();startTimer();sound("click");
 }
+
 function startTimer(){
   timerId=setInterval(()=>{
     if(!gameActive)return;
     timeLeft--;
     $("timer").textContent=timeLeft;
-    $("timer").style.color=timeLeft<=10?"var(--red)":"";
-    if(timeLeft<=0)endGame(false,"หมดเวลาแล้ว!");
+    $("timer").style.color=timeLeft<=10?"#ff4d6d":"";
+
+    if(timeLeft<=10 && timeLeft>0){
+      sound("click");
+    }
+
+    if(timeLeft<=0){
+      endGame(false,"หมดเวลา!");
+    }
   },1000);
 }
+
 function shuffle(a){
   a=[...a];
   for(let i=a.length-1;i>0;i--){
