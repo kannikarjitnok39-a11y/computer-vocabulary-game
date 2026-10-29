@@ -37,7 +37,7 @@ let musicStep = 0;
 
 
 
-function startMusic() {
+
 function startMusic() {
   if (musicOn) return;
 
