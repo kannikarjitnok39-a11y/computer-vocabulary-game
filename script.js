@@ -30,6 +30,86 @@ function sound(type){
     osc.start(t);osc.stop(t+seq.length*.12);
   }catch(e){}
 }
+let musicOn = false;
+let musicGain = null;
+let musicTimer = null;
+let musicStep = 0;
+
+function startMusic() {
+  if (musicOn) return;
+
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    audioCtx.resume();
+
+    musicOn = true;
+    musicGain = audioCtx.createGain();
+    musicGain.gain.value = 0.30;
+    musicGain.connect(audioCtx.destination);
+
+    const chords = [
+      [261.63, 329.63, 392.00],
+      [220.00, 261.63, 329.63],
+      [174.61, 220.00, 261.63],
+      [196.00, 246.94, 293.66]
+    ];
+
+    function playChord() {
+      if (!musicOn || !musicGain) return;
+
+      const chord = chords[musicStep % chords.length];
+      musicStep++;
+
+      chord.forEach((frequency, index) => {
+        const osc = audioCtx.createOscillator();
+        const noteGain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.value = frequency;
+        osc.connect(noteGain);
+        noteGain.connect(musicGain);
+
+        const now = audioCtx.currentTime;
+        noteGain.gain.setValueAtTime(0.0001, now);
+        noteGain.gain.linearRampToValueAtTime(0.025, now + 0.25);
+        noteGain.gain.linearRampToValueAtTime(0.0001, now + 1.7);
+
+        osc.start(now);
+        osc.stop(now + 1.8);
+      });
+    }
+
+    playChord();
+    musicTimer = setInterval(playChord, 1800);
+
+    $("musicToggle").textContent = "🎵 ปิดเพลง";
+  } catch (error) {
+    musicOn = false;
+  }
+}
+
+function stopMusic() {
+  musicOn = false;
+  if (musicTimer) {
+    clearInterval(musicTimer);
+    musicTimer = null;
+  }
+
+  if (musicGain && audioCtx) {
+    musicGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+    musicGain = null;
+  }
+
+  $("musicToggle").textContent = "🎵 เปิดเพลง";
+}
+
+$("musicToggle").onclick = () => {
+  if (musicOn) {
+    stopMusic();
+  } else {
+    startMusic();
+  }
+};
 $("soundToggle").onclick=()=>{
   soundOn=!soundOn;
   $("soundToggle").textContent=soundOn?"🔊 เสียงเปิด":"🔇 เสียงปิด";
