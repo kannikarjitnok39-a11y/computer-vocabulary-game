@@ -91,7 +91,7 @@ function startMusic() {
       playNote(note, now, 0.42, 0.10, "sine");
 
       if (step % 2 === 0) {
-        playNote(note / 2, now, 0.65, 0.045, "triangle");
+        playNote(note, now, 0.11, 0.06, "triangle");
       }
 
       if (step % 4 === 0) {
@@ -102,7 +102,7 @@ function startMusic() {
     }
 
     playBeat();
-    musicTimer = setInterval(playBeat, 350);
+    musicTimer = setInterval(playBeat, 130);
 
     $("musicToggle").textContent = "🎵 ปิดเพลง";
   } catch (error) {
