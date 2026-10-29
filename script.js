@@ -35,52 +35,72 @@ let musicGain = null;
 let musicTimer = null;
 let musicStep = 0;
 
+
 function startMusic() {
   if (musicOn) return;
 
   try {
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-    audioCtx.resume();
+    audioCtx = audioCtx ||
+      new (window.AudioContext || window.webkitAudioContext)();
 
+    audioCtx.resume();
     musicOn = true;
+
     musicGain = audioCtx.createGain();
     musicGain.gain.value = 0.30;
     musicGain.connect(audioCtx.destination);
 
-    const chords = [
-      [261.63, 329.63, 392.00],
-      [220.00, 261.63, 329.63],
-      [174.61, 220.00, 261.63],
-      [196.00, 246.94, 293.66]
+    const melody = [
+      523.25, 659.25, 783.99, 659.25,
+      587.33, 659.25, 523.25, 392.00,
+      440.00, 523.25, 659.25, 523.25,
+      392.00, 440.00, 523.25, 440.00
     ];
 
-    function playChord() {
-      if (!musicOn || !musicGain) return;
+    const bass = [130.81, 110.00, 87.31, 98.00];
+    let step = 0;
 
-      const chord = chords[musicStep % chords.length];
-      musicStep++;
+    function playNote(freq, start, duration, volume, type) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
 
-      chord.forEach((frequency, index) => {
-        const osc = audioCtx.createOscillator();
-        const noteGain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      osc.connect(gain);
+      gain.connect(musicGain);
 
-        osc.type = "sine";
-        osc.frequency.value = frequency;
-        osc.connect(noteGain);
-        noteGain.connect(musicGain);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.linearRampToValueAtTime(volume, start + 0.04);
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001, start + duration
+      );
 
-        const now = audioCtx.currentTime;
-        noteGain.gain.setValueAtTime(0.0001, now);
-        noteGain.gain.linearRampToValueAtTime(0.025, now + 0.25);
-        noteGain.gain.linearRampToValueAtTime(0.0001, now + 1.7);
-
-        osc.start(now);
-        osc.stop(now + 1.8);
-      });
+      osc.start(start);
+      osc.stop(start + duration + 0.02);
     }
 
-    playChord();
-    musicTimer = setInterval(playChord, 1800);
+    function playBeat() {
+      if (!musicOn || !musicGain) return;
+
+      const now = audioCtx.currentTime;
+      const note = melody[step % melody.length];
+      const bassNote = bass[Math.floor(step / 4) % bass.length];
+
+      playNote(note, now, 0.42, 0.10, "sine");
+
+      if (step % 2 === 0) {
+        playNote(note / 2, now, 0.65, 0.045, "triangle");
+      }
+
+      if (step % 4 === 0) {
+        playNote(bassNote, now, 0.8, 0.12, "sine");
+      }
+
+      step++;
+    }
+
+    playBeat();
+    musicTimer = setInterval(playBeat, 350);
 
     $("musicToggle").textContent = "🎵 ปิดเพลง";
   } catch (error) {
@@ -90,18 +110,22 @@ function startMusic() {
 
 function stopMusic() {
   musicOn = false;
+
   if (musicTimer) {
     clearInterval(musicTimer);
     musicTimer = null;
   }
 
   if (musicGain && audioCtx) {
-    musicGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+    musicGain.gain.setTargetAtTime(
+      0, audioCtx.currentTime, 0.1
+    );
     musicGain = null;
   }
 
   $("musicToggle").textContent = "🎵 เปิดเพลง";
 }
+
 
 $("musicToggle").onclick = () => {
   alert("ปุ่มเพลงทำงาน");
