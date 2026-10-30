@@ -143,8 +143,9 @@ $("soundToggle").onclick=()=>{
   $("soundToggle").textContent=soundOn?"🔊 เสียงเปิด":"🔇 เสียงปิด";
   if(soundOn)sound("click");
 };
-$("startBtn").onclick=startGame;
-$("againBtn").onclick=startGame;
+$("startBtn").onclick=()=>showScreen("lessonScreen");
+$("playGameBtn").onclick=startGame;
+$("backHomeBtn").onclick=()=>showScreen("homeScreen");$("againBtn").onclick=startGame;
 $("menuBtn").onclick=()=>{
   stopTimer();gameActive=false;showScreen("homeScreen");
 };
