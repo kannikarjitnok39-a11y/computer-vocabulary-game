@@ -13,7 +13,7 @@ let selectedEnglish=null, selectedThai=null, timerId=null;
 let gameActive=false, soundOn=true, audioCtx=null;
 
 function showScreen(id){
-  ["homeScreen","gameScreen","resultScreen"].forEach(s=>
+  ["homeScreen","lessonScreen","gameScreen","resultScreen"].forEach(s=>
     $(s).classList.toggle("active",s===id));
 }
 function sound(type){
